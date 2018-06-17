@@ -10,6 +10,8 @@ using Microsoft.Extensions.Logging;
 using Microsoft.Extensions.Options;
 using MTG.Models;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.Extensions.Hosting;
+using System.IO;
 
 namespace MTG
 {
@@ -25,9 +27,16 @@ namespace MTG
         // This method gets called by the runtime. Use this method to add services to the container.
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<CardContext>(opt =>
-                opt.UseInMemoryDatabase("CardList"));
             services.AddMvc();
+            IConfigurationRoot configuration = new ConfigurationBuilder()
+            .SetBasePath(Directory.GetCurrentDirectory())
+            .AddJsonFile("appsettings.json")
+            .Build();
+
+            services.AddDbContext<MTGContext>(options =>
+                    options.UseSqlServer(Configuration.GetConnectionString("MTGContext")));
+
+            services.AddSingleton<IHostedService, TimedHostedService>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

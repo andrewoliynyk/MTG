@@ -6,13 +6,13 @@ using Microsoft.EntityFrameworkCore;
 
 namespace MTG.Models
 {
-    public class CardContext : DbContext
+    public class MTGContext : DbContext
     {
-        public CardContext(DbContextOptions<CardContext> options)
+        public MTGContext (DbContextOptions<MTGContext> options)
             : base(options)
         {
         }
 
-        public DbSet<Card> Cards { get; set; }
+        public DbSet<MTG.Models.Card> Card { get; set; }
     }
 }

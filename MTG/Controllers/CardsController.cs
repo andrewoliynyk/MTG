@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
-using MTG.Models;
 using Microsoft.EntityFrameworkCore;
-
-// For more information on enabling Web API for empty projects, visit https://go.microsoft.com/fwlink/?LinkID=397860
+using MTG.Models;
 
 namespace MTG.Controllers
 {
@@ -14,18 +13,18 @@ namespace MTG.Controllers
     [Route("api/Cards")]
     public class CardsController : Controller
     {
-        private readonly CardContext _context;
+        private readonly MTGContext _context;
 
-        public CardsController(CardContext context)
+        public CardsController(MTGContext context)
         {
             _context = context;
         }
 
         // GET: api/Cards
         [HttpGet]
-        public IEnumerable<Card> GetCards()
+        public IEnumerable<Card> GetCard()
         {
-            return _context.Cards;
+            return _context.Card;
         }
 
         // GET: api/Cards/5
@@ -37,31 +36,31 @@ namespace MTG.Controllers
                 return BadRequest(ModelState);
             }
 
-            var Card = await _context.Cards.SingleOrDefaultAsync(m => m.Id == id);
+            var card = await _context.Card.SingleOrDefaultAsync(m => m.Id == id);
 
-            if (Card == null)
+            if (card == null)
             {
                 return NotFound();
             }
 
-            return Ok(Card);
+            return Ok(card);
         }
 
         // PUT: api/Cards/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCard([FromRoute] string id, [FromForm] Card Card)
+        public async Task<IActionResult> PutCard([FromRoute] string id, [FromBody] Card card)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            if (id != Card.Id)
+            if (id != card.Id)
             {
                 return BadRequest();
             }
 
-            _context.Entry(Card).State = EntityState.Modified;
+            _context.Entry(card).State = EntityState.Modified;
 
             try
             {
@@ -84,17 +83,17 @@ namespace MTG.Controllers
 
         // POST: api/Cards
         [HttpPost]
-        public async Task<IActionResult> PostCard([FromForm] Card Card)
+        public async Task<IActionResult> PostCard([FromBody] Card card)
         {
             if (!ModelState.IsValid)
             {
                 return BadRequest(ModelState);
             }
 
-            _context.Cards.Add(Card);
+            _context.Card.Add(card);
             await _context.SaveChangesAsync();
 
-            return CreatedAtAction("GetCard", new { id = Card.Id }, Card);
+            return CreatedAtAction("GetCard", new { id = card.Id }, card);
         }
 
         // DELETE: api/Cards/5
@@ -106,21 +105,21 @@ namespace MTG.Controllers
                 return BadRequest(ModelState);
             }
 
-            var Card = await _context.Cards.SingleOrDefaultAsync(m => m.Id == id);
-            if (Card == null)
+            var card = await _context.Card.SingleOrDefaultAsync(m => m.Id == id);
+            if (card == null)
             {
                 return NotFound();
             }
 
-            _context.Cards.Remove(Card);
+            _context.Card.Remove(card);
             await _context.SaveChangesAsync();
 
-            return Ok(Card);
+            return Ok(card);
         }
 
         private bool CardExists(string id)
         {
-            return _context.Cards.Any(e => e.Id == id);
+            return _context.Card.Any(e => e.Id == id);
         }
     }
 }
