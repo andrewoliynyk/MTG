@@ -61,8 +61,8 @@ namespace MTG
             IEnumerable<Card> Cards = null;
 
             CardService service = new CardService();
-            var asyncResult = await service.AllAsync();
-            HttpResponseMessage response = await client.GetAsync(@"https://api.magicthegathering.io/v1/cards");
+            var asyncResult = await service.Where(x => x.Set, "dom").AllAsync();
+            //HttpResponseMessage response = await client.GetAsync(@"https://api.magicthegathering.io/v1/cards");
             if (asyncResult.IsSuccess)
             {
                 var obj = asyncResult.Value;

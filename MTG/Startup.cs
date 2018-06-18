@@ -12,6 +12,7 @@ using MTG.Models;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Hosting;
 using System.IO;
+using Swashbuckle.AspNetCore.Swagger;
 
 namespace MTG
 {
@@ -36,6 +37,11 @@ namespace MTG
             services.AddDbContext<MTGContext>(options =>
                     options.UseSqlServer(Configuration.GetConnectionString("MTGContext")));
 
+            services.AddSwaggerGen(c =>
+            {
+                c.SwaggerDoc("v1", new Info { Title = "My API", Version = "v1" });
+            });
+
             services.AddSingleton<IHostedService, TimedHostedService>();
         }
 
@@ -46,6 +52,13 @@ namespace MTG
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseSwagger();
+            app.UseSwaggerUI(c =>
+            {
+                c.SwaggerEndpoint("/swagger/v1/swagger.json", "My API V1");
+            });
+
 
             app.UseMvc();
         }

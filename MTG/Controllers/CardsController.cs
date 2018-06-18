@@ -22,9 +22,9 @@ namespace MTG.Controllers
 
         // GET: api/Cards
         [HttpGet]
-        public IEnumerable<Card> GetCard()
+        public IEnumerable<Card> GetCards()
         {
-            return _context.Card;
+            return _context.Card.ToList();
         }
 
         // GET: api/Cards/5
@@ -48,7 +48,7 @@ namespace MTG.Controllers
 
         // PUT: api/Cards/5
         [HttpPut("{id}")]
-        public async Task<IActionResult> PutCard([FromRoute] string id, [FromBody] Card card)
+        public async Task<IActionResult> PutCard([FromRoute] string id, Card card)
         {
             if (!ModelState.IsValid)
             {
@@ -83,7 +83,7 @@ namespace MTG.Controllers
 
         // POST: api/Cards
         [HttpPost]
-        public async Task<IActionResult> PostCard([FromBody] Card card)
+        public async Task<IActionResult> PostCard( Card card)
         {
             if (!ModelState.IsValid)
             {
